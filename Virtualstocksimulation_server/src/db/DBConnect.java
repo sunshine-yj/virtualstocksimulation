@@ -4,15 +4,14 @@
 //내용 : DB를 MySQL과 연결하기 위한 클래스
 package db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.*;
 
 public class DBConnect {
 	
-	String address ="jdbc:mysql://127.0.0.1:3306/stockdb";
-	String uid = "KYJ";
-	String pwd = "password";
-	String jdbc_driver = "com.mysql.cj.jdbc.Driver";
+	private static String address ="jdbc:mysql://127.0.0.1:3306/stockdb";
+	private static String uid = "KYJ";
+	private static String pwd = "password";
+	private static String jdbc_driver = "com.mysql.cj.jdbc.Driver";
 	
 	DBConnect() {
 		try {
