@@ -1,10 +1,8 @@
-package server;
+package client;
 
 public class MSGTable {
-	/*
-	 * LOGIN : 로그인 인식 태그
-	 * TOPSTOCK : 인기 차트
-	 */
+	
 	int numberOfMSG = 8;
 	String[] MSGtags = {"LOGIN", "SEARCH", "FAV", "REGISTER", "WALLET"};
+
 }

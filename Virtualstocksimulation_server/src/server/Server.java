@@ -13,10 +13,10 @@ public class Server {
 
 			Server server = new Server();
 			try {
-				server.ss = new ServerSocket(55555);                    //서버 소켓 생성
+				server.ss = new ServerSocket(55555);
 				System.out.println("Server> Server Socket is created....");
-				while(true) {                                                         //서버 메인쓰레드 소켓생성 무한루프
-					Socket socket = server.ss.accept();	                          //소켓생성
+				while(true) {
+					Socket socket = server.ss.accept();
 					ConnectedClient c = new ConnectedClient(socket, server.clients);
 					server.clients.add(c);
 					c.start();

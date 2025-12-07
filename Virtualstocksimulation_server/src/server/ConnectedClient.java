@@ -8,6 +8,9 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import db.*;
+import api.*;
+
 class ConnectedClient extends Thread{
 	Socket socket;
 	
@@ -15,6 +18,10 @@ class ConnectedClient extends Thread{
 	ArrayList<ConnectedClient> clients;
 	ReceivedMSGTokenizer msgController = new ReceivedMSGTokenizer();
 	MSGBuilder mBuilder = new MSGBuilder();
+	StockInformation sf;
+	StockSystem ss = new StockSystem();
+	UserDAO ud = new UserDAO();
+	StockDAO sd = new StockDAO();
 	
 	OutputStream outStream;
 	DataOutputStream dataOutStream;
@@ -40,11 +47,12 @@ class ConnectedClient extends Thread{
 			while(true) {
 				// 클라이언트가 전송한 메시지 패킷을 받는다
 				String msg = dataInStream.readUTF();
+				System.out.println(msg);
 				this.setUID(msgController.findUID(msg));
 				System.out.println(getUID() + " : " + msg);
 				//ReceivedMSGTokenizer에서 클라이언트가 전송한 메시지 유형을 확인
 				typeMSG = msgController.detection(msg);
-				System.out.println(getUID() + " : " + typeMSG + "번 실행");
+				System.out.println(getUID() + " : " + msg + "," + typeMSG + "번 실행");
 				//확인된 메시지 유형에 따라 메시지를 정형화하여 클라이언트에 전송
 				msgBasedService(typeMSG, msg);
 
@@ -68,6 +76,79 @@ class ConnectedClient extends Thread{
 	
 	// 서버 메시지 규격 전송
 	void msgBasedService(int _type, String _msg) {
+		if(_type == 0) {
+			String _smsg = null;
+			this.setUID(msgController.findUID(_msg));
+			_smsg = mBuilder.loginMSG(loginCheak(_msg), getUID());
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(_type == 1) {
+			String _smsg = null;
+			String StockName = msgController.findStock(_msg);
+			sf = ss.searchIteam(StockName);
+			_smsg = mBuilder.searchStockMSG(sf.getItemName(), sf.getClPrice(), sf.getFltRt(), sf.getVs(), sf.getTrqu());
+			System.out.println("SEARCH: " + _smsg);
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(_type == 2) {
+			favPlus(_msg);
+		}
+		if(_type == 3) {
+			RegisterUser(_msg);
+		}
+		if(_type == 4) {
+			String _smsg = null;
+			int money = walletUser(_msg);
+			_smsg = mBuilder.moneyMSG(money);
+			System.out.println("WALLET: " + _smsg);
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
+	}
+	
+	// 로그인 확인 메소드
+	int loginCheak(String _msg) {
+		int result = -1;
+		String _uid = msgController.findUID(_msg);
+		String _pwd = msgController.findPWD(_msg);
+		
+		result = ud.loginUser(_uid, _pwd);
+		
+		return result;// 로그인 성공시 1반환
+	}
+	
+	// 즐겨찾기 추가 메소드
+	void favPlus(String _msg) {
+		String _uid = msgController.findUID(_msg);
+		String sName = msgController.findfav(_msg);
+		
+		sd.insertFav(_uid, sName);
+	}
+	// 회원가입 메소드
+	void RegisterUser(String _msg) {
+		String _uid = msgController.findUID(_msg);
+		String _pwd = msgController.findPWD(_msg);
+		
+		ud.insertUser(_uid, _pwd);
+	}
+	// 지갑 호출
+	int walletUser(String _msg) {
+		String _uid = msgController.findWallet(_msg);
+		
+		return ud.walletUser(_uid);
 	}
 }

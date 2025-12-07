@@ -13,5 +13,42 @@ public class StockDAO {
 	private PreparedStatement pstmt= null;
 	private ResultSet rs = null;
 	
+	// 즐겨찾기 추가
+	public void insertFav(String _uid, String _itemName) {
+		
+		conn = dbc.getConnection();
+		String query = "insert into fav (user_id, itms_nm) values(?,?)";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, _uid);
+			pstmt.setString(2, _itemName);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+		
+	}
 	
+	// DB 연결 자원 해제
+	private void removeAll() {
+		try {
+			if(rs != null) 
+				rs.close();	
+			if(stmt != null)
+				stmt.close();
+			if(pstmt != null)
+				pstmt.close();
+			if(conn != null)
+				conn.close();
+					
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -28,25 +28,51 @@ public class UserDAO {
 			pstmt.setString(2, _pwd);
 			rs = pstmt.executeQuery();
 		
-			while(rs.next()) {
+			if(rs.next()) {
 				System.out.println("-> " + _uid + " 로그인에 성공함");
 				result = 1;// 로그인 성공시 1 전송
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			removeAll();
 		}
 		
 		return result;
 	}
 	
-	// 회원가입 메소드 
-	public boolean insertUser(String _uid, String _pwd) {
+	// 보유 금액 출력
+	public int walletUser(String _uid) { 
+		int result = -1;
+		conn = dbc.getConnection();
+		String query = "select wallet from users where user_id = ?";
 		
-		boolean bool = false;
+		try {
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, _uid);
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+		
+		return result;
+	}
+	
+	// 회원가입 메소드
+	public void insertUser(String _uid, String _pwd) {
 		
 		conn = dbc.getConnection();
-		String query = "insert into users values(?,?)";
+		String query = "insert into users (user_id, pwd) values(?,?)";
 		
 		try {
 			
@@ -58,12 +84,29 @@ public class UserDAO {
 			int updated = pstmt.executeUpdate();
 			if(updated == 1) {
 				System.out.println("-> " + _uid + " 회원가입에 성공함");
-				bool = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			removeAll();
 		}
-		
-		return bool;
+	}
+	
+	
+	// DB 연결 자원 해제
+	private void removeAll() {
+		try {
+			if(rs != null) 
+				rs.close();	
+			if(stmt != null)
+				stmt.close();
+			if(pstmt != null)
+				pstmt.close();
+			if(conn != null)
+				conn.close();
+					
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
