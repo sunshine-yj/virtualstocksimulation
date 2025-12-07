@@ -28,7 +28,7 @@ public class StockSystem {
 	
 	// 주식 검색을 위한 메소드
 	public StockInformation searchIteam(String itemName) {
-		LocalDate date = LocalDate.now().minusDays(3);
+		LocalDate date = LocalDate.now().minusDays(4);
 		//https://breakcoding.tistory.com/120
 		//주소에서 참고하여 사용하였습니다.
 		DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("yyyyMMdd");
