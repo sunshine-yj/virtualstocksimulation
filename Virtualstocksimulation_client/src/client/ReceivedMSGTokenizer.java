@@ -47,6 +47,13 @@ public class ReceivedMSGTokenizer {
 		return Integer.valueOf(st.nextToken()); // 수신 메시지에서 wallet 추출
 	}
 	
+	// 보유 주식 분리
+	public int havStock(String _msg) {
+		st = new StringTokenizer(_msg, "///");
+		st.nextToken(); // 수신 메시지에서 tag부분 추출
+		return Integer.valueOf(st.nextToken()); // 수신 메시지에서 개수 추출
+	}
+	
 	// 주식 분리
 	public String finditemName(String _msg) {
 		st = new StringTokenizer(_msg, "///");

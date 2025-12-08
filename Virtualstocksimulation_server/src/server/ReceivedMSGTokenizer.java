@@ -21,6 +21,10 @@ public class ReceivedMSGTokenizer {
 		}
 		return result;
 	}
+
+//====================================================================================
+// 메시지 추출 메소드
+//====================================================================================
 	
 	// 아이디 관련 메소드
 	// 아이디추출을 위한 메소드
@@ -45,6 +49,8 @@ public class ReceivedMSGTokenizer {
 		return st.nextToken(); // 수신 메시지에서 wallet 추출
 	}
 	
+	
+	// 주식 관련 메소드
 	// 주식 검색 추출 메소드
 	String findStock(String _msg) {
 		st = new StringTokenizer(_msg, "///");
@@ -58,6 +64,25 @@ public class ReceivedMSGTokenizer {
 		st.nextToken();   // 수신 메시지에서 tag부분 추출
 		st.nextToken();   // 수신 메시지에서 아이디부분 추출
 		return st.nextToken();  // 수신된 주식명
+	}
+	
+	// 주식 개수 추출 메소드
+	int findStockCnt(String _msg) {
+		st = new StringTokenizer(_msg, "///");
+		st.nextToken();   // 수신 메시지에서 tag부분 추출
+		st.nextToken();   // 수신 메시지에서 아이디부분 추출
+		st.nextToken();    // 수신된 주식명 추출
+		return Integer.valueOf(st.nextToken());  // 수신된 주식 개수 추출
+	}
+	
+	// 주식 개수 추출 메소드
+	int findStockPrice(String _msg) {
+		st = new StringTokenizer(_msg, "///");
+		st.nextToken();   // 수신 메시지에서 tag부분 추출
+		st.nextToken();   // 수신 메시지에서 아이디부분 추출
+		st.nextToken();    // 수신된 주식명 추출
+		st.nextToken();    // 수신된 주식 개수 추출
+		return Integer.valueOf(st.nextToken());  // 수신된 주식 가격
 	}
 	
 	

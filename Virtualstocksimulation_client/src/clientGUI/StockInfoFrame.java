@@ -9,12 +9,19 @@ import javax.swing.table.*;
 import client.*;
 
 public class StockInfoFrame extends JFrame {
+	
+	// 주식 정보
 	String itemName;
 	int clPrice;
 	Double fltRt;
 	int vs;
 	int trqu;
 	
+	// 내 주식 정보
+	String hav_msg;
+	int hav_cnt = 0;
+	
+	// 보유 금액
 	int wallet = 0;
 	
 	JPanel panel = new JPanel(new BorderLayout());
@@ -37,10 +44,7 @@ public class StockInfoFrame extends JFrame {
 //		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); 보류
 		MyActionListener ml = new MyActionListener();
 		
-		/////////////////////////////////////////////////////////////////////////////////////////////////		
 		// 주식 정보 변환
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-
 		itemName = rt.finditemName(_msg);
 		clPrice = rt.findclPrice(_msg);
 		fltRt = rt.findfltRt(_msg);
@@ -103,10 +107,14 @@ public class StockInfoFrame extends JFrame {
 		mainPanel.add(Texttrqu);
 		panel.add(mainPanel, BorderLayout.CENTER);
 		
-		/////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		hav_msg = connector.sendStock(mainOperator.lf.getUserId(), itemName);
+		hav_cnt = Integer.valueOf(rt.havStock(hav_msg));
+		
+		
+		
 		// 주식 구매 판매 버튼 배치
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-
 		JButton sell = new JButton("판 매");
 		JButton buy = new JButton("구 매");
 		sell.setPreferredSize(new Dimension(185, 30));
@@ -114,10 +122,20 @@ public class StockInfoFrame extends JFrame {
 		sell.setBackground(Color.RED);
 		sell.addActionListener(e -> {
 			String cnt = JOptionPane.showInputDialog("판매 개수 입력:");
-			int money = Integer.valueOf(cnt);
-			if(wallet < money) {
-				JOptionPane.showMessageDialog(this, "보유금액이 부족합니다.");
+			int stockCnt = Integer.valueOf(cnt);
+			int money = stockCnt(stockCnt, clPrice);
+//				wallet += money;
+			// 구매 주식 정보 전달 위치
+			if (hav_cnt >= stockCnt) {
+				connector.sendSell(mainOperator.lf.getUserId(), itemName, stockCnt, clPrice);
+				
+				wallet = connector.sendWalletView(mainOperator.lf.getUserId());
+				mainOperator.mf.updateWallet();
+				JOptionPane.showMessageDialog(this, "판매하였습니다.");
+			} else {
+				JOptionPane.showMessageDialog(this, "보유주식이 부족합니다.");
 			}
+			
 		});
 		
 		buy.setPreferredSize(new Dimension(185, 30));
@@ -129,6 +147,17 @@ public class StockInfoFrame extends JFrame {
 			int money = stockCnt(stockCnt, clPrice);
 			if(wallet < money) {
 				JOptionPane.showMessageDialog(this, "보유금액이 부족합니다.");
+			} else if (wallet >= money) {
+//				wallet -= money;
+				// 구매 주식 정보 전달 위치
+				
+				connector.sendBuy(mainOperator.lf.getUserId(), itemName, stockCnt, clPrice);
+				
+				wallet = connector.sendWalletView(mainOperator.lf.getUserId());
+				mainOperator.mf.updateWallet();
+				JOptionPane.showMessageDialog(this, "구매하였습니다.");
+			} else {
+				System.out.println("주식 구매 버튼 오류");
 			}
 		});
 		

@@ -35,6 +35,130 @@ public class StockDAO {
 		
 	}
 	
+	// 구매 주식 저장
+	public void insertStock(String _uid, String _itemName, int _itemCnt, int _price) {
+		
+		conn = dbc.getConnection();
+		String querySelect = "select havstockcnt, stock_price from havstock where itms_nm = ? and user_id = ?";
+		String queryInsert = "insert into havstock (itms_nm, user_id, havstockcnt, stock_price) values(?,?,?,?)";
+		String queryUpdate = "update havstock set  havstockcnt = ?, stock_price = ? where itms_nm = ? and user_id = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(querySelect);
+			pstmt.setString(1, _itemName);
+			pstmt.setString(2, _uid);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				
+				int oldCnt = rs.getInt("havstockcnt");
+				int oldPrice = rs.getInt("stock_price");
+				
+				pstmt.close();
+				
+				pstmt = conn.prepareStatement(queryUpdate);
+				
+				pstmt.setInt(1, _itemCnt + oldCnt);
+				pstmt.setInt(2, (oldPrice * oldCnt + _itemCnt * _price) / (_itemCnt + oldCnt));
+				pstmt.setString(3, _itemName);
+				pstmt.setString(4, _uid);
+				
+				pstmt.executeUpdate();
+				
+			}
+			else {
+				
+				pstmt.close();
+				
+				pstmt = conn.prepareStatement(queryInsert);
+				pstmt.setString(1, _itemName);
+				pstmt.setString(2, _uid);
+				pstmt.setInt(3, _itemCnt);
+				pstmt.setInt(4, _price);
+				
+				pstmt.executeUpdate();
+			}
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+	}
+	
+	// 판매 주식 저장
+	public void sellStock(String _uid, String _itemName, int _itemCnt, int _price) {
+		
+		conn = dbc.getConnection();
+		String querySelect = "select havstockcnt, stock_price from havstock where itms_nm = ? and user_id = ?";
+		String queryUpdate = "update havstock set  havstockcnt = ? where itms_nm = ? and user_id = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(querySelect);
+			pstmt.setString(1, _itemName);
+			pstmt.setString(2, _uid);
+			
+			rs = pstmt.executeQuery();
+			
+			
+			
+			if(rs.next()) {
+				
+				int oldCnt = rs.getInt("havstockcnt");
+				
+				pstmt.close();
+				
+				pstmt = conn.prepareStatement(queryUpdate);
+				
+				pstmt.setInt(1, oldCnt - _itemCnt);
+				pstmt.setString(2, _itemName);
+				pstmt.setString(3, _uid);
+				
+				pstmt.executeUpdate();
+				
+			}
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+	}
+	
+	// 보유 주식 가져오기
+	public int havStock(String _uid, String _itemName) { // 로그인에 맞게 수정
+		int result = -1;
+		conn = dbc.getConnection();
+		String query = "select havstockcnt from havstock where user_id = ? and itms_nm = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, _uid);
+			pstmt.setString(2, _itemName);
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				result = rs.getInt("havstockcnt");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+		
+		return result;
+	}
+		
+	
 	// DB 연결 자원 해제
 	private void removeAll() {
 		try {

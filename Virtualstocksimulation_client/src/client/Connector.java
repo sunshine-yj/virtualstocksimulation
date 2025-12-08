@@ -97,5 +97,39 @@ public class Connector {
 		
 		return money;
 	}
+	// 보유 주식 요청
+	public String sendStock(String _uid, String _itemName) {
+		String msg = null;
+
+		try {
+			dataOutStream.writeUTF(mBuilder.havStockMSG(_uid, _itemName));
+			msg = dataInStream.readUTF();
+		}catch(Exception e) {
+			
+		}
+		
+		return msg;
+	}
+	
+	// 주식 구매 요청
+	public void sendBuy(String _uid, String _itemName, int _itemCnt, int _price) {
+		try {
+			dataOutStream.writeUTF(mBuilder.buyMSG(_uid, _itemName, _itemCnt, _price));
+		}catch(Exception e) {
+			
+		}
+	}
+	
+	// 주식 구매 요청
+	public void sendSell(String _uid, String _itemName, int _itemCnt, int _price) {
+		String msg = null;
+		int _money = -1;
+		try {
+			dataOutStream.writeUTF(mBuilder.sellMSG(_uid, _itemName, _itemCnt, _price));
+		}catch(Exception e) {
+			
+		}
+	}
+	
 	
 }

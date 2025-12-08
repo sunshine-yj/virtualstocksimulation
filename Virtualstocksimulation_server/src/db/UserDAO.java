@@ -68,6 +68,71 @@ public class UserDAO {
 		return result;
 	}
 	
+	// 보유 금액 업데이트
+	public void walletMinus(String _uid, int _money) { 
+		
+		conn = dbc.getConnection();
+		String queryselect = "select wallet from users where user_id = ?";
+		String queryupdate = "update users set wallet = ? where user_id = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(queryselect);
+			pstmt.setString(1, _uid);
+			rs = pstmt.executeQuery();
+			rs.next();
+			int wallet = rs.getInt("wallet");
+			
+			wallet -= _money;
+			
+			pstmt.close();
+			
+			pstmt = conn.prepareStatement(queryupdate);
+			
+			pstmt.setInt(1, wallet);
+			pstmt.setString(2, _uid);
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+
+	}
+	// 보유 금액 업데이트
+	public void walletPlus(String _uid, int _money) { 
+		
+		conn = dbc.getConnection();
+		String queryselect = "select wallet from users where user_id = ?";
+		String queryupdate = "update users set wallet = ? where user_id = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(queryselect);
+			pstmt.setString(1, _uid);
+			rs = pstmt.executeQuery();
+			rs.next();
+			int wallet = rs.getInt("wallet");
+			
+			wallet += _money;
+			
+			pstmt.close();
+			
+			pstmt = conn.prepareStatement(queryupdate);
+			
+			pstmt.setInt(1, wallet);
+			pstmt.setString(2, _uid);
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+
+	}
+	
 	// 회원가입 메소드
 	public void insertUser(String _uid, String _pwd) {
 		

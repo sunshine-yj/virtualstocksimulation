@@ -58,4 +58,14 @@ public class MSGBuilder {
 
 		return madenMSG;
 	}
+	
+	// 보유주식 전달을 위한 정보 메시지
+	String havStockMSG(int cnt) {
+		String madenMSG = null;
+		madenMSG =  "HAV" + "///" 
+				+ cnt + "///" 
+				+ "END";
+
+		return madenMSG;
+	}
 }

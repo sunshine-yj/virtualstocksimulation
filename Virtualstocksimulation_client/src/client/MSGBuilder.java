@@ -49,5 +49,42 @@ public class MSGBuilder {
 
 		return madenMSG;
 	}
+	// 구매 정보 전달
+	String buyMSG(String _uid, String _itemName, int _itemCnt, int _money) {
+		String madenMSG = null;
+		madenMSG =  "BUY" + "///" 
+				+ _uid + "///"
+				+ _itemName + "///"
+				+ _itemCnt + "///"
+				+ _money + "///"
+				+ "END";
+		
+		return madenMSG;
+	}
+	
+	// 보유 주식 요청
+	String havStockMSG(String _uid, String _itemName) {
+		String madenMSG = null;
+		madenMSG =  "HAV" + "///" 
+				+ _uid + "///"
+				+ _itemName + "///"
+				+ "END";
+		
+		return madenMSG;
+	}
+	
+	// 구매 정보 전달
+	String sellMSG(String _uid, String _itemName, int _itemCnt, int _money) {
+		String madenMSG = null;
+		madenMSG =  "SELL" + "///" 
+				+ _uid + "///"
+				+ _itemName + "///"
+				+ _itemCnt + "///"
+				+ _money + "///"
+				+ "END";
+		
+		return madenMSG;
+	}
+	
 	
 }

@@ -74,7 +74,11 @@ class ConnectedClient extends Thread{
 		else return "No_ID";
 	}
 	
-	// 서버 메시지 규격 전송
+	
+//====================================================================================
+// 서버 메시지 규격 전송
+//====================================================================================
+	
 	void msgBasedService(int _type, String _msg) {
 		if(_type == 0) {
 			String _smsg = null;
@@ -117,8 +121,31 @@ class ConnectedClient extends Thread{
 				e.printStackTrace();
 			}
 		}
+		if(_type == 5) {
+			buyStock(_msg);
+		}
+		if(_type == 6) {
+			sellStock(_msg);
+		}
+		if(_type == 7) {
+			String _smsg = null;
+			int cnt = sd.havStock(msgController.findUID(_msg), msgController.findfav(_msg));
+			_smsg = mBuilder.havStockMSG(cnt);
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
+	
+	
+//====================================================================================
+// 기능 실행 메소드
+//====================================================================================
+
 	
 	// 로그인 확인 메소드
 	int loginCheak(String _msg) {
@@ -151,4 +178,28 @@ class ConnectedClient extends Thread{
 		
 		return ud.walletUser(_uid);
 	}
+	// 주식 구매
+	void buyStock(String _msg) {
+		String _uid = msgController.findUID(_msg);
+		String _itemName = msgController.findfav(_msg);
+		int _itemCnt = msgController.findStockCnt(_msg);
+		int _price = msgController.findStockPrice(_msg);
+		
+		sd.insertStock(_uid, _itemName, _itemCnt, _price);
+		int minus = _itemCnt * _price;
+		ud.walletMinus(_uid, minus);
+	}
+	
+	// 주식 판매
+	void sellStock(String _msg) {
+		String _uid = msgController.findUID(_msg);
+		String _itemName = msgController.findfav(_msg);
+		int _itemCnt = msgController.findStockCnt(_msg);
+		int _price = msgController.findStockPrice(_msg);
+		
+		sd.sellStock(_uid, _itemName, _itemCnt, _price);
+		int plus = _itemCnt * _price;
+		ud.walletPlus(_uid, plus);
+	}
+	
 }

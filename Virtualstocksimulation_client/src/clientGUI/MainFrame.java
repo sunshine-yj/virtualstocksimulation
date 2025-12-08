@@ -106,22 +106,5 @@ public class MainFrame extends JFrame {
 		_money = connector.sendWalletView(mainOperator.lf.getUserId());
 		typeWallet.setText(String.valueOf(_money));
 	}
-	/*
-	class MyActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JButton button = (JButton)e.getSource();
-			if(button.getText().equals("검 색")) {
-				String msg = connector.sendSearch(typeItemNm.getText());
-				System.out.println("검색 버튼 : " + typeItemNm.getText());
-				if(msg != null) {
-					new StockInfoFrame(mainOperator, msg);
-				} else {
-					System.out.println("msg값이 없음");
-				}
-			}
-		}
-		
-	}
-	*/
+	
 }
