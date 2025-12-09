@@ -16,6 +16,7 @@ class ConnectedClient extends Thread{
 	
 	String uid = null;
 	ArrayList<ConnectedClient> clients;
+	ArrayList<Stock> havStockList = new ArrayList<>();
 	ReceivedMSGTokenizer msgController = new ReceivedMSGTokenizer();
 	MSGBuilder mBuilder = new MSGBuilder();
 	StockInformation sf;
@@ -131,6 +132,19 @@ class ConnectedClient extends Thread{
 			String _smsg = null;
 			int cnt = sd.havStock(msgController.findUID(_msg), msgController.findfav(_msg));
 			_smsg = mBuilder.havStockMSG(cnt);
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(_type == 8) {
+			String _smsg = null;
+			
+			havStockList = sd.havStockList(msgController.findUID(_msg));
+			_smsg = mBuilder.havStockListMSG(havStockList);
+			
 			try {
 				dataOutStream.writeUTF(_smsg);
 			} catch (IOException e) {

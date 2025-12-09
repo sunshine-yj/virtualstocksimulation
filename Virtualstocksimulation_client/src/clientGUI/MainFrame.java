@@ -88,6 +88,7 @@ public class MainFrame extends JFrame {
 		// 보유주식 조회 리스트
 		
 		havStockList.setPreferredSize(new Dimension(300, 350));
+		havStockList.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		havListPanel.add(havStockList);
 		
 		
@@ -105,6 +106,11 @@ public class MainFrame extends JFrame {
 	public void updateWallet() {
 		_money = connector.sendWalletView(mainOperator.lf.getUserId());
 		typeWallet.setText(String.valueOf(_money));
+	}
+	
+	public void updateHavList() {
+		connector.sendHavList(mainOperator.lf.getUserId());
+		
 	}
 	
 }

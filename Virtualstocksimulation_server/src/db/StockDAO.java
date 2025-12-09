@@ -5,6 +5,7 @@
 package db;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class StockDAO {
 	DBConnect dbc = new DBConnect();
@@ -131,6 +132,7 @@ public class StockDAO {
 		}
 	}
 	
+	
 	// 보유 주식 가져오기
 	public int havStock(String _uid, String _itemName) { // 로그인에 맞게 수정
 		int result = -1;
@@ -156,6 +158,41 @@ public class StockDAO {
 		}
 		
 		return result;
+	}
+	
+	// 보유 주식 리스트 가져오기
+	public ArrayList<Stock> havStockList(String _uid) { // 로그인에 맞게 수정
+		ArrayList<Stock> havStockList = new ArrayList<>();
+		String item = null;
+		int cnt = -1;
+		int price = -1;
+		
+		
+		conn = dbc.getConnection();
+		String query = "select itms_nm, havstockcnt, stock_price from havstock where user_id = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, _uid);
+			rs = pstmt.executeQuery();
+		
+			while(rs.next()) {
+				item = rs.getString("itms_nm");
+				cnt = rs.getInt("havstockcnt");
+				price = rs.getInt("stock_price");
+				
+				havStockList.add(new Stock(item, cnt, price));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAll();
+		}
+		
+		return havStockList;
 	}
 		
 	

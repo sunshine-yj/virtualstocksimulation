@@ -2,6 +2,7 @@ package client;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Connector {
 	Socket mySocket = null;
@@ -11,6 +12,7 @@ public class Connector {
 	DataInputStream dataInStream=null;
 	MSGBuilder mBuilder = new MSGBuilder();
 	ReceivedMSGTokenizer msgController = new ReceivedMSGTokenizer();
+	ArrayList<Stock> havStockList = new ArrayList<>();
 	
 	public Connector() {
 		try {
@@ -131,5 +133,18 @@ public class Connector {
 		}
 	}
 	
+	// 주식 리스트 요청
+	public String sendHavList(String _uid) {
+		String msg = null;
+		
+		try {
+			dataOutStream.writeUTF(mBuilder.havListMSG(_uid));
+			msg = dataInStream.readUTF();
+		}catch(Exception e) {
+			
+		}
+		
+		return msg;
+	}
 	
 }

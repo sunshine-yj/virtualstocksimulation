@@ -6,5 +6,5 @@ public class MSGTable {
 	 * TOPSTOCK : 인기 차트
 	 */
 	int numberOfMSG = 8;
-	String[] MSGtags = {"LOGIN", "SEARCH", "FAV", "REGISTER", "WALLET", "BUY", "SELL", "HAV"};
+	String[] MSGtags = {"LOGIN", "SEARCH", "FAV", "REGISTER", "WALLET", "BUY", "SELL", "HAV", "HAVLIST"};
 }

@@ -1,5 +1,7 @@
 package server;
 
+import java.util.ArrayList;
+
 import db.*;
 
 public class MSGBuilder {
@@ -64,6 +66,15 @@ public class MSGBuilder {
 		String madenMSG = null;
 		madenMSG =  "HAV" + "///" 
 				+ cnt + "///" 
+				+ "END";
+
+		return madenMSG;
+	}
+	
+	// 보유주식 전달을 위한 정보 메시지
+	String havStockListMSG(ArrayList<Stock> havStockList) {
+		String madenMSG = null;
+		madenMSG =  "HAVLIST" + "///" 
 				+ "END";
 
 		return madenMSG;

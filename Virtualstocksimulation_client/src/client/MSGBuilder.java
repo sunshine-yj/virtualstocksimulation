@@ -62,6 +62,19 @@ public class MSGBuilder {
 		return madenMSG;
 	}
 	
+	// 판매 정보 전달
+	String sellMSG(String _uid, String _itemName, int _itemCnt, int _money) {
+		String madenMSG = null;
+		madenMSG =  "SELL" + "///" 
+				+ _uid + "///"
+				+ _itemName + "///"
+				+ _itemCnt + "///"
+				+ _money + "///"
+				+ "END";
+		
+		return madenMSG;
+	}
+	
 	// 보유 주식 요청
 	String havStockMSG(String _uid, String _itemName) {
 		String madenMSG = null;
@@ -73,14 +86,13 @@ public class MSGBuilder {
 		return madenMSG;
 	}
 	
-	// 구매 정보 전달
-	String sellMSG(String _uid, String _itemName, int _itemCnt, int _money) {
+	
+	
+	// 주식 리스트 요청
+	String havListMSG(String _uid) {
 		String madenMSG = null;
 		madenMSG =  "SELL" + "///" 
 				+ _uid + "///"
-				+ _itemName + "///"
-				+ _itemCnt + "///"
-				+ _money + "///"
 				+ "END";
 		
 		return madenMSG;
