@@ -140,6 +140,7 @@ public class Connector {
 		try {
 			dataOutStream.writeUTF(mBuilder.havListMSG(_uid));
 			msg = dataInStream.readUTF();
+			System.out.println(msg);
 		}catch(Exception e) {
 			
 		}

@@ -2,6 +2,8 @@ package clientGUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -9,6 +11,7 @@ import javax.swing.table.*;
 import client.*;
 
 public class MainFrame extends JFrame {
+	
 	StockInfoFrame sif;
 	int _money = 0;
 	// 배치할 패널
@@ -38,7 +41,7 @@ public class MainFrame extends JFrame {
 		
 	
 	
-	
+	ReceivedMSGTokenizer rt = new ReceivedMSGTokenizer();
 	Connector connector;
 	Client mainOperator = null;
 	
@@ -86,9 +89,10 @@ public class MainFrame extends JFrame {
 		mainPanel.add(topPanel, BorderLayout.NORTH);
 		
 		// 보유주식 조회 리스트
-		
 		havStockList.setPreferredSize(new Dimension(300, 350));
 		havStockList.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		
 		havListPanel.add(havStockList);
 		
 		
@@ -102,15 +106,26 @@ public class MainFrame extends JFrame {
 		setContentPane(mainPanel);
 		setVisible(false); // 임시 실행시 true
 	}
-	
+	// 지갑 최신화
 	public void updateWallet() {
 		_money = connector.sendWalletView(mainOperator.lf.getUserId());
 		typeWallet.setText(String.valueOf(_money));
 	}
-	
-	public void updateHavList() {
-		connector.sendHavList(mainOperator.lf.getUserId());
+	// 목록 최신화
+	public void updateList() {
+		ArrayList<Stock> list = new ArrayList<>();
+		ArrayList<String> newlist = new ArrayList<>();
 		
+		String _msg;
+		_msg = connector.sendHavList(mainOperator.lf.getUserId());
+		list = rt.stockList(_msg);
+		for(Stock s : list) {
+			String stock = s.getItemName() + " | " + s.getHavCnt()+ "주" + " | " + s.getPrice() + " | " + s.getHavCnt()*s.getPrice();
+			
+			newlist.add(stock);
+		}
+		
+		havStockList.setListData(newlist.toArray(new String[0]));
 	}
 	
 }

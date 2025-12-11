@@ -16,7 +16,6 @@ class ConnectedClient extends Thread{
 	
 	String uid = null;
 	ArrayList<ConnectedClient> clients;
-	ArrayList<Stock> havStockList = new ArrayList<>();
 	ReceivedMSGTokenizer msgController = new ReceivedMSGTokenizer();
 	MSGBuilder mBuilder = new MSGBuilder();
 	StockInformation sf;
@@ -76,10 +75,7 @@ class ConnectedClient extends Thread{
 	}
 	
 	
-//====================================================================================
-// 서버 메시지 규격 전송
-//====================================================================================
-	
+	// 서버 메시지 규격 전송	
 	void msgBasedService(int _type, String _msg) {
 		if(_type == 0) {
 			String _smsg = null;
@@ -140,27 +136,22 @@ class ConnectedClient extends Thread{
 			}
 		}
 		if(_type == 8) {
+			ArrayList<Stock> havStockList = new ArrayList<>();
 			String _smsg = null;
 			
 			havStockList = sd.havStockList(msgController.findUID(_msg));
-			_smsg = mBuilder.havStockListMSG(havStockList);
-			
+			_smsg = String.valueOf(mBuilder.havStockListMSG(havStockList));
+			System.out.println(_smsg); // 확인
 			try {
 				dataOutStream.writeUTF(_smsg);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
 	}
 	
-	
-//====================================================================================
-// 기능 실행 메소드
-//====================================================================================
-
-	
+	// 기능 실행 메소드
 	// 로그인 확인 메소드
 	int loginCheak(String _msg) {
 		int result = -1;

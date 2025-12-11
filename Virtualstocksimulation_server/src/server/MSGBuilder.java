@@ -72,10 +72,17 @@ public class MSGBuilder {
 	}
 	
 	// 보유주식 전달을 위한 정보 메시지
-	String havStockListMSG(ArrayList<Stock> havStockList) {
-		String madenMSG = null;
-		madenMSG =  "HAVLIST" + "///" 
-				+ "END";
+	StringBuilder havStockListMSG(ArrayList<Stock> havStockList) {
+		StringBuilder madenMSG = new StringBuilder();
+		
+		// 보유 주식 리스트 가져오기
+		madenMSG.append("HAVLIST///");
+		for(Stock s : havStockList) {
+			madenMSG.append(s.getItemName()).append("///")
+				.append(s.getHavCnt()).append("///")
+				.append(s.getPrice()).append("///");
+		}
+		madenMSG.append("END");
 
 		return madenMSG;
 	}

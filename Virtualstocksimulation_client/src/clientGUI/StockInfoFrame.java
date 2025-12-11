@@ -124,13 +124,14 @@ public class StockInfoFrame extends JFrame {
 			String cnt = JOptionPane.showInputDialog("판매 개수 입력:");
 			int stockCnt = Integer.valueOf(cnt);
 			int money = stockCnt(stockCnt, clPrice);
-//				wallet += money;
 			// 구매 주식 정보 전달 위치
 			if (hav_cnt >= stockCnt) {
 				connector.sendSell(mainOperator.lf.getUserId(), itemName, stockCnt, clPrice);
 				
 				wallet = connector.sendWalletView(mainOperator.lf.getUserId());
+				// 변경된 정보 최신화
 				mainOperator.mf.updateWallet();
+				mainOperator.mf.updateList();
 				JOptionPane.showMessageDialog(this, "판매하였습니다.");
 			} else {
 				JOptionPane.showMessageDialog(this, "보유주식이 부족합니다.");
@@ -148,13 +149,15 @@ public class StockInfoFrame extends JFrame {
 			if(wallet < money) {
 				JOptionPane.showMessageDialog(this, "보유금액이 부족합니다.");
 			} else if (wallet >= money) {
-//				wallet -= money;
 				// 구매 주식 정보 전달 위치
 				
 				connector.sendBuy(mainOperator.lf.getUserId(), itemName, stockCnt, clPrice);
 				
 				wallet = connector.sendWalletView(mainOperator.lf.getUserId());
+				// 변경된 정보 최신화
 				mainOperator.mf.updateWallet();
+				mainOperator.mf.updateList();
+
 				JOptionPane.showMessageDialog(this, "구매하였습니다.");
 			} else {
 				System.out.println("주식 구매 버튼 오류");

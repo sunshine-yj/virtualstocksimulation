@@ -91,7 +91,7 @@ public class MSGBuilder {
 	// 주식 리스트 요청
 	String havListMSG(String _uid) {
 		String madenMSG = null;
-		madenMSG =  "SELL" + "///" 
+		madenMSG =  "HAVLIST" + "///" 
 				+ _uid + "///"
 				+ "END";
 		
