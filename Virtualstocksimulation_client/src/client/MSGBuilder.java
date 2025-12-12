@@ -98,5 +98,15 @@ public class MSGBuilder {
 		return madenMSG;
 	}
 	
+	// 주식 리스트 요청
+	String favListMSG(String _uid) {
+		String madenMSG = null;
+		madenMSG =  "FAVLIST" + "///" 
+				+ _uid + "///"
+				+ "END";
+		
+		return madenMSG;
+	}
+	
 	
 }

@@ -67,7 +67,7 @@ public class ReceivedMSGTokenizer {
 		st.nextToken();   // 수신 메시지에서 주식명 추출
 		return Integer.valueOf(st.nextToken());  // 수신 메시지에서 종가 추출
 	}
-	// 주식 등락률
+	// 주식 상승률
 	public double findfltRt(String _msg) {
 		st = new StringTokenizer(_msg, "///");
 		st.nextToken();   // 수신 메시지에서 tag부분 추출
@@ -76,7 +76,7 @@ public class ReceivedMSGTokenizer {
 		return Double.valueOf(st.nextToken());  // 수신 메시지에서 상승률 추출
 	}
 	
-	// 주식 등락률
+	// 주식 상승가
 	public int findvs(String _msg) {
 		st = new StringTokenizer(_msg, "///");
 		st.nextToken();   // 수신 메시지에서 tag부분 추출
@@ -86,7 +86,7 @@ public class ReceivedMSGTokenizer {
 		return Integer.valueOf(st.nextToken());  // 수신 메시지에서 상승가 추출
 	}
 	
-	// 주식 등락률
+	// 주식 거래량
 	public int findtrqu(String _msg) {
 		st = new StringTokenizer(_msg, "///");
 		st.nextToken();   // 수신 메시지에서 tag부분 추출
@@ -118,4 +118,23 @@ public class ReceivedMSGTokenizer {
 		
 		return list;
 	}
+	
+	public ArrayList<Stock> favList(String _msg) {
+		ArrayList<Stock> list = new ArrayList<>();
+		st = new StringTokenizer(_msg, "///");
+		
+		st.nextToken();   // 수신 메시지에서 tag부분 추출
+		while(st.hasMoreTokens()) {
+			String itemName = st.nextToken(); // 주식 이름 추출
+			
+			if(itemName.equals("END")) {
+				break;
+			}
+			
+			list.add(new Stock(itemName));
+		}
+		
+		return list;
+	}
+	
 }

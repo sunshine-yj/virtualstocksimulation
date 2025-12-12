@@ -86,4 +86,18 @@ public class MSGBuilder {
 
 		return madenMSG;
 	}
+	
+	// 보유주식 전달을 위한 정보 메시지
+	StringBuilder favStockListMSG(ArrayList<Stock> havStockList) {
+		StringBuilder madenMSG = new StringBuilder();
+		
+		// 보유 주식 리스트 가져오기
+		madenMSG.append("FAVLIST///");
+		for(Stock s : havStockList) {
+			madenMSG.append(s.getItemName()).append("///");
+		}
+		madenMSG.append("END");
+
+		return madenMSG;
+	}
 }

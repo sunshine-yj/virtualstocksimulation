@@ -148,6 +148,19 @@ class ConnectedClient extends Thread{
 				e.printStackTrace();
 			}
 		}
+		if(_type == 9) {
+			ArrayList<Stock> havStockList = new ArrayList<>();
+			String _smsg = null;
+			
+			havStockList = sd.favStockList(msgController.findUID(_msg));
+			_smsg = String.valueOf(mBuilder.favStockListMSG(havStockList));
+			System.out.println(_smsg); // 확인
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	

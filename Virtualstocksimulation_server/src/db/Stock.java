@@ -11,12 +11,18 @@ public class Stock {
 		this.price = price;
 	}
 	
+	Stock(String itemName) {
+		this.itemName = itemName;
+	}
+	
 	public String getItemName() {
 		return itemName;
 	}
+	
 	public int getHavCnt() {
 		return havCnt;
 	}
+	
 	public int getPrice() {
 		return price;
 	}

@@ -148,4 +148,18 @@ public class Connector {
 		return msg;
 	}
 	
+	public String sendFavList(String _uid) {
+		String msg = null;
+		
+		try {
+			dataOutStream.writeUTF(mBuilder.favListMSG(_uid));
+			msg = dataInStream.readUTF();
+			System.out.println(msg);
+		}catch(Exception e) {
+			
+		}
+		
+		return msg;
+	}
+	
 }

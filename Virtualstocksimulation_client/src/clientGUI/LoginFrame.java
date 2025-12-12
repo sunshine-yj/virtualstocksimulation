@@ -8,12 +8,12 @@ import client.*;
 
 public class LoginFrame extends JFrame {
 	JPanel panel = new JPanel(new FlowLayout()); // 레이아웃 선언 
-	JButton enter = new JButton("Login"); // Button enter 선언 
-	JButton register = new JButton("Register"); // Button enter 선언
+	JButton enter = new JButton("로그인"); // Button enter 선언 
+	JButton register = new JButton("회원가입"); // Button enter 선언
 	JTextField typeId = new JTextField(); // id 받은곳  선언
 	JPasswordField typePassword = new JPasswordField(); // password 받은곳 선언 받으면 ** < 처럼 나옴
-	JLabel id = new JLabel("I   D"); // 라벨 type id
-	JLabel password = new JLabel("Password"); // 라벨 type password
+	JLabel id = new JLabel("아 이 디"); // 라벨 type id
+	JLabel password = new JLabel("비밀번호"); // 라벨 type password
 	static String user_id;
 	Connector connector;
 	Client mainOperator = null;
@@ -54,7 +54,7 @@ public class LoginFrame extends JFrame {
 		//이벤트를 발생시킨 컴포넌트(소스)
 		public void actionPerformed(ActionEvent e) {
 			JButton b =  (JButton)e.getSource();
-			if (b.getText().equals("Login")) {	// 로그인버튼을 누르면...
+			if (b.getText().equals("로그인")) {	// 로그인버튼을 누르면...
 				//Password 컴포넌트에서 문자열 읽어오기 1
 				String pwd = "";
 				int result = -1;
@@ -67,6 +67,7 @@ public class LoginFrame extends JFrame {
 					user_id = typeId.getText();
 					mainOperator.mf.updateWallet();
 					mainOperator.mf.updateList();
+					mainOperator.mf.updatefavList();
 					mainOperator.mf.setVisible(true);
 					System.out.println("로그인 성공");
 					dispose();
@@ -75,7 +76,7 @@ public class LoginFrame extends JFrame {
 				}
 								
 				
-			}else if (b.getText().equals("Register")) {
+			}else if (b.getText().equals("회원가입")) {
 				mainOperator.rf.setVisible(true);
 			}
 		}

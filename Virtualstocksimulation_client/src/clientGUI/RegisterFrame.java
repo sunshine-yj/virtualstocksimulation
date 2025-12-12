@@ -8,12 +8,12 @@ import client.*;
 
 public class RegisterFrame extends JFrame {
 	JPanel panel = new JPanel(new FlowLayout()); // 레이아웃 선언 
-	JButton register = new JButton("Register"); // Button enter 선언 
-	JButton cancel = new JButton("Cancel"); // Button enter 선언
+	JButton register = new JButton("확인"); // Button enter 선언 
+	JButton cancel = new JButton("취소"); // Button enter 선언
 	JTextField typeId = new JTextField(); // id 받은곳  선언
 	JTextField typePassword = new JTextField(); // password 받은곳 선언 받으면 ** < 처럼 나옴
-	JLabel id = new JLabel("I   D"); // 라벨 type id
-	JLabel password = new JLabel("Password"); // 라벨 type password
+	JLabel id = new JLabel("아 이 디"); // 라벨 type id
+	JLabel password = new JLabel("비밀번호"); // 라벨 type password
 	static String user_id;
 	Connector connector;
 	Client mainOperator = null;
@@ -40,6 +40,7 @@ public class RegisterFrame extends JFrame {
 		register.addActionListener(ml); // Login 버튼에 이벤트 리스너 추가 
 		cancel.addActionListener(ml); // Cancel 버튼에 이벤트 리스너 추가
 		
+		
 		setResizable(false);
 		setSize(400, 150);
 		//로그인화면을 중앙에 배치
@@ -52,10 +53,10 @@ public class RegisterFrame extends JFrame {
 		//이벤트를 발생시킨 컴포넌트(소스)
 		public void actionPerformed(ActionEvent e) {
 			JButton b =  (JButton)e.getSource();
-			if (b.getText().equals("Register")) {
+			if (b.getText().equals("확인")) {
 				connector.sendRegister(typeId.getText(), typePassword.getText());
 				dispose();
-			}else if (b.getText().equals("Cancel")) {
+			}else if (b.getText().equals("취소")) {
 				typeId.setText("");
 				typePassword.setText("");
 			}

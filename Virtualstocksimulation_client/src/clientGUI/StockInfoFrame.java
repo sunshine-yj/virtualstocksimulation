@@ -132,6 +132,8 @@ public class StockInfoFrame extends JFrame {
 				// 변경된 정보 최신화
 				mainOperator.mf.updateWallet();
 				mainOperator.mf.updateList();
+				
+				
 				JOptionPane.showMessageDialog(this, "판매하였습니다.");
 			} else {
 				JOptionPane.showMessageDialog(this, "보유주식이 부족합니다.");
@@ -188,6 +190,7 @@ public class StockInfoFrame extends JFrame {
 				String getItemName = itemName;
 				String user_id = mainOperator.lf.getUserId();
 				connector.sendFav(user_id, getItemName);
+				mainOperator.mf.updatefavList();
 			}
 		}
 	}
