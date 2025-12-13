@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 메인 GUI관리 
 package clientGUI;
 
 import java.awt.*;
@@ -14,11 +18,16 @@ public class MainFrame extends JFrame {
 	
 	StockInfoFrame sif;
 	int _money = 0;
+	
+	
 	// 배치할 패널
 	JPanel mainPanel = new JPanel(new BorderLayout());// 메인
 	JPanel topPanel = new JPanel(new FlowLayout());
-	JPanel centerPanel = new JPanel(new FlowLayout());
+	JPanel centerPanel = new JPanel(new BorderLayout());
+	JPanel centerRightPanel = new JPanel();
 	JPanel bottomPanel = new JPanel(new FlowLayout());
+	
+	
 	// 검색 패널
 	JPanel searchPanel = new JPanel(new FlowLayout());// 검색기능
 	JLabel searchLabel = new JLabel("주식명 : ");
@@ -26,24 +35,35 @@ public class MainFrame extends JFrame {
 	JButton search = new JButton("검 색");
 
 	// 사이 공간 패널
-	JPanel non = new JPanel();
-	JPanel non1 = new JPanel();
+	JPanel non = new JPanel();	
 	
-	
+	// 지갑 송출
 	JPanel walletPanel = new JPanel();// 보유금액 송출
 	JLabel walletLabel = new JLabel("보유금액 : ");
 	JTextField typeWallet = new JTextField(); // 출력 창
 	
 	
-	// 보유 주식 리스트
+	// 인기 순위 리스트
+	JPanel rankPanrl = new JPanel(new BorderLayout());
+	JLabel rankLabel = new JLabel("주식 인기 순위");
+	String rankHeader[] = {"순위", "종목명", "가격", "상승률", "거래량"};
+	String[][] rankBody = new String[12][5];
+	JTable rankTable;
+	
+	
+	// 즐겨찾기
+	JPanel favlist = new JPanel();// 즐겨찾기 모델
+	JComboBox<String> favComboBox = new JComboBox<>(); // 즐겨찾기
+	
+	
+	// 보유 주식 리스트(인기 순위와 변경해야 함)
 	JPanel havListPanel = new JPanel(new BorderLayout());// 보유 주식 송출
 	JLabel havLabel = new JLabel("보유 주식 목록");
 	JList havStockList = new JList();
-	
-	JPanel favlist = new JPanel();// 즐겨찾기 모델
-	JComboBox<String> favComboBox = new JComboBox<>(); // 즐겨찾기
+	String havHeader[] = {"종목명", "주식 수", "평균가", "총 가격"};
+	String[][] havBody = new String[10][4];
+	JTable havTable;
 		
-	
 	
 	ReceivedMSGTokenizer rt = new ReceivedMSGTokenizer();
 	Connector connector;
@@ -54,7 +74,7 @@ public class MainFrame extends JFrame {
 		connector = _o.connector;
 		// mainPanel 구성
 		setTitle("가상 주식 어플리케이션");
-		setSize(800, 500);
+		setSize(800, 400);
 		// 창을 닫으면 종료
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// 메인화면을 중앙으로 배치
@@ -91,22 +111,50 @@ public class MainFrame extends JFrame {
 		
 		mainPanel.add(topPanel, BorderLayout.NORTH);
 		
+		
+		//인기 차트
+		rankPanrl.setPreferredSize(new Dimension(300, 250));
+		rankPanrl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		rankLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		rankTable = new JTable(rankBody, rankHeader);
+		rankPanrl.add(rankLabel, BorderLayout.NORTH);
+		rankPanrl.add(new JScrollPane(rankTable), BorderLayout.CENTER);
+		
+		
+		// 즐겨찾기 콤보 박스 + 선택시 검색
+		favComboBox.setPreferredSize(new Dimension(200, 40));
+		favComboBox.addActionListener(e -> {
+			String itemName = (String) favComboBox.getSelectedItem();
+			if(itemName.equals("선택목록")) {
+				return;
+			}
+			String msg = connector.sendSearch(itemName);
+			System.out.println("콤보 박스 : " + typeItemNm.getText());
+			if(msg != null) {
+				sif = new StockInfoFrame(mainOperator, msg, _money);
+			} else {
+				System.out.println("msg값이 없음");
+			}
+		});
+		
+		
 		// 보유주식 조회 리스트
-		havStockList.setPreferredSize(new Dimension(300, 350));
-		havStockList.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		havTable = new JTable(havBody, havHeader);
+		havLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		havListPanel.add(havLabel, BorderLayout.NORTH);
-		havListPanel.add(havStockList, BorderLayout.CENTER);
+		havListPanel.add(new JScrollPane(havTable), BorderLayout.CENTER);
 		
-		// 즐겨찾기 콤보 박스
-		favComboBox.setPreferredSize(new Dimension(200, 50));
+		
 		favlist.add(favComboBox);
-		favlist.setPreferredSize(new Dimension(300, 350));
+		favlist.setPreferredSize(new Dimension(300, 75));
 		
-		non1.setPreferredSize(new Dimension(100, 30));
 		
-		centerPanel.add(havListPanel);
-		centerPanel.add(non1);
-		centerPanel.add(favlist);
+		centerRightPanel.setLayout(new BoxLayout(centerRightPanel, BoxLayout.Y_AXIS));
+		centerRightPanel.add(favlist);
+		centerRightPanel.add(havListPanel);
+				
+		centerPanel.add(rankPanrl, BorderLayout.WEST);
+		centerPanel.add(centerRightPanel, BorderLayout.EAST);
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
 		
 		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
@@ -131,15 +179,15 @@ public class MainFrame extends JFrame {
 		String _msg;
 		_msg = connector.sendHavList(mainOperator.lf.getUserId());
 		list = rt.stockList(_msg);
-		
+		int i = 0;
 		for(Stock s : list) {
-			String stock = s.getItemName() + " | " + s.getHavCnt()+ "주" + " | " + s.getPrice() + " | " + s.getHavCnt()*s.getPrice();
-			if(s.getHavCnt() != 0) {
-				newlist.add(stock);
-			}
+			havBody[i][0] = s.getItemName();
+			havBody[i][1] = String.valueOf(s.getHavCnt());
+			havBody[i][2] = String.valueOf(s.getPrice());
+			havBody[i][3] = String.valueOf(s.getHavCnt()*s.getPrice());
+			i++;
 		}
 		
-		havStockList.setListData(newlist.toArray(new String[0])); // AI 사용부분 : 정형화한 문자열을 어떻게 삽입해야 하는지 감을 잡지 못하여 사용하였습니다.
 	}
 	
 	// 즐겨찾기 불러오기
@@ -151,8 +199,27 @@ public class MainFrame extends JFrame {
 		_msg = connector.sendFavList(mainOperator.lf.getUserId());
 		list = rt.favList(_msg);
 		
+		favComboBox.addItem("선택목록");
 		for(Stock s : list) {
 			favComboBox.addItem(s.getItemName());
+		}
+		
+	}
+	
+	public void updateRankList() {
+		ArrayList<Stock> list = new ArrayList<>();
+		ArrayList<String> newlist = new ArrayList<>();
+		String _msg;
+		_msg = connector.sendRankList();
+		list = rt.rankList(_msg);
+		int i = 0;
+		for(Stock s : list) {
+			rankBody[i][0] = String.valueOf(i+1);
+			rankBody[i][1] = s.getItemName();
+			rankBody[i][2] = String.valueOf(s.getPrice());
+			rankBody[i][3] = String.valueOf(s.getFltRt());
+			rankBody[i][4] = String.valueOf(s.getTrqu());
+			i++;
 		}
 		
 	}

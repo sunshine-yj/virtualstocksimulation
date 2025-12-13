@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 로그인을 위한 GUI창
 package clientGUI;
 
 import javax.swing.*;
@@ -65,9 +69,14 @@ public class LoginFrame extends JFrame {
 				result = connector.sendLogin(typeId.getText(), pwd);
 				if(result != -1 ) {
 					user_id = typeId.getText();
+					
 					mainOperator.mf.updateWallet();
 					mainOperator.mf.updateList();
 					mainOperator.mf.updatefavList();
+					mainOperator.mf.updateRankList();
+					
+//					mainOperator.mf.revalidate();
+//					mainOperator.mf.repaint();
 					mainOperator.mf.setVisible(true);
 					System.out.println("로그인 성공");
 					dispose();

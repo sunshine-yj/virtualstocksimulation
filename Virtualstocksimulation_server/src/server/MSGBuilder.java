@@ -2,6 +2,7 @@ package server;
 
 import java.util.ArrayList;
 
+import api.StockInformation;
 import db.*;
 
 public class MSGBuilder {
@@ -87,17 +88,34 @@ public class MSGBuilder {
 		return madenMSG;
 	}
 	
-	// 보유주식 전달을 위한 정보 메시지
-	StringBuilder favStockListMSG(ArrayList<Stock> havStockList) {
+	// 즐겨찾기 전달을 위한 정보 메시지
+	StringBuilder favStockListMSG(ArrayList<Stock> favStockList) {
 		StringBuilder madenMSG = new StringBuilder();
 		
 		// 보유 주식 리스트 가져오기
 		madenMSG.append("FAVLIST///");
-		for(Stock s : havStockList) {
+		for(Stock s : favStockList) {
 			madenMSG.append(s.getItemName()).append("///");
 		}
 		madenMSG.append("END");
 
+		return madenMSG;
+	}
+	
+	// 주식 랭크 전달을 위한 메시지
+	StringBuilder rankStockListMSG(ArrayList<StockInformation> list) {
+		StringBuilder madenMSG = new StringBuilder();
+		
+		// 랭킹 주식 리스트 가져오기
+		madenMSG.append("RANK///");
+		for(StockInformation s : list) {
+			madenMSG.append(s.getItemName()).append("///")
+				.append(s.getClPrice()).append("///")
+				.append(s.getFltRt()).append("///")
+				.append(s.getTrqu()).append("///");
+		}
+		madenMSG.append("END");
+		
 		return madenMSG;
 	}
 }

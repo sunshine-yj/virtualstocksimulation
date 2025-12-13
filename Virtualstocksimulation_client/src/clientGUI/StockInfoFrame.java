@@ -1,7 +1,13 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 주식 정보 다이어로그 창
 package clientGUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -23,11 +29,23 @@ public class StockInfoFrame extends JFrame {
 	
 	// 보유 금액
 	int wallet = 0;
-	
-	JPanel panel = new JPanel(new BorderLayout());
-	JPanel favPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	CardLayout cardLayout = new CardLayout();
+	JPanel cardPanel = new JPanel(cardLayout);
+	// 주식 구매 판매 
+	JPanel panel1 = new JPanel(new BorderLayout());
+	JPanel favsimPanel = new JPanel(new FlowLayout());
 	JPanel mainPanel = new JPanel(new FlowLayout());
 	JPanel sellBuyPanel = new JPanel(new FlowLayout());
+	
+	// 주식 시뮬레이션
+	JPanel panel2 = new JPanel(new BorderLayout());
+	JPanel mainPanel2 = new JPanel(new BorderLayout());
+	JPanel dateSearch = new JPanel(new FlowLayout());
+
+	JComboBox<Integer> yearComboBox = new JComboBox<>(); // 년도
+	JComboBox<Integer> monthComboBox = new JComboBox<>(); // 월
+
+	
 	Connector connector = new Connector();
 	Client mainOperator = null;
 	
@@ -41,7 +59,6 @@ public class StockInfoFrame extends JFrame {
 		setSize(400, 400);
 		// 메인화면을 중앙으로 배치
 		setLocationRelativeTo(null);
-//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); 보류
 		MyActionListener ml = new MyActionListener();
 		
 		// 주식 정보 변환
@@ -51,12 +68,20 @@ public class StockInfoFrame extends JFrame {
 		vs = rt.findvs(_msg);
 		trqu = rt.findtrqu(_msg);
 		
+		// 주식 예상 금액 계산
+		JButton simButton = new JButton("주식계산기");
+		simButton.addActionListener(ml);
+		simButton.setPreferredSize(new Dimension(185, 30));
+		favsimPanel.add(simButton);
+		
+		
 		// 즐겨찾기 버튼 배치
 		JButton favButton = new JButton("즐겨찾기");
 		favButton.addActionListener(ml);
 		favButton.setPreferredSize(new Dimension(185, 30));
-		favPanel.add(favButton);
-		panel.add(favPanel, BorderLayout.NORTH);
+		favsimPanel.add(favButton);
+		panel1.add(favsimPanel, BorderLayout.NORTH);
+		
 		
 		// 주식 정보 출력
 		JLabel labelitemName = new JLabel("주식명 : ");
@@ -90,7 +115,7 @@ public class StockInfoFrame extends JFrame {
 		Texttrqu.setPreferredSize(new Dimension(300, 30));
 		
 		
-		
+		// 패널에 추가
 		mainPanel.add(labelitemName);
 		mainPanel.add(TextitemName);
 		
@@ -105,10 +130,9 @@ public class StockInfoFrame extends JFrame {
 		
 		mainPanel.add(labeltrqu);
 		mainPanel.add(Texttrqu);
-		panel.add(mainPanel, BorderLayout.CENTER);
+		panel1.add(mainPanel, BorderLayout.CENTER);
 		
-		
-		
+		// 보유 주식 불러오기
 		hav_msg = connector.sendStock(mainOperator.lf.getUserId(), itemName);
 		hav_cnt = Integer.valueOf(rt.havStock(hav_msg));
 		
@@ -168,9 +192,67 @@ public class StockInfoFrame extends JFrame {
 		
 		sellBuyPanel.add(sell);
 		sellBuyPanel.add(buy);
-		panel.add(sellBuyPanel, BorderLayout.SOUTH);
+		panel1.add(sellBuyPanel, BorderLayout.SOUTH);
 		
-		setContentPane(panel);
+		
+		// 주식 시뮬레이션
+		
+		// 뒤로 가기 버튼
+		JButton back = new JButton("뒤로가기");
+		back.setPreferredSize(new Dimension(185, 30));
+		back.addActionListener(e -> {
+			cardLayout.show(cardPanel, "stockinfo");
+		});
+		
+		// 오늘 일자
+		int today = LocalDate.now().getYear();
+		// 년도 콤보박스
+		for(int year = 2021; year <= today; year++) {
+			yearComboBox.addItem(year);
+		}
+		// 월 콤보 박스
+		for(int month = 1; month <= 12; month++) {
+			monthComboBox.addItem(month);
+		}
+		yearComboBox.setPreferredSize(new Dimension(185, 30));
+		monthComboBox.setPreferredSize(new Dimension(185, 30));
+		JLabel oldstockCntLabel = new JLabel("주식개수 : ");
+		oldstockCntLabel.setPreferredSize(new Dimension(70, 30));
+		JTextField stockCnt = new JTextField();
+		stockCnt.setPreferredSize(new Dimension(300, 30));
+		
+		
+		JLabel stockCntLabel = new JLabel("현재 총 가격 : ");
+		stockCntLabel.setPreferredSize(new Dimension(70, 30));
+		JTextField stockSumnow = new JTextField();
+		stockSumnow.setPreferredSize(new Dimension(300, 30));
+		stockSumnow.setEditable(false);
+
+
+		// 출력 버튼
+		JButton simulationButton = new JButton("출력");
+		simulationButton.addActionListener(e -> {
+			
+		});
+
+		
+		// 시뮬레이션 배치
+		mainPanel2.add(back, BorderLayout.NORTH);
+		dateSearch.add(yearComboBox);
+		dateSearch.add(monthComboBox);
+		dateSearch.add(oldstockCntLabel);
+		dateSearch.add(stockCnt);
+		dateSearch.add(stockCntLabel);
+		dateSearch.add(stockSumnow);
+
+		mainPanel2.add(dateSearch, BorderLayout.CENTER);
+		panel2.add(mainPanel2);
+		
+		
+		cardPanel.add(panel1, "stockinfo");
+		cardPanel.add(panel2, "stockcalc");
+
+		setContentPane(cardPanel);
 		setVisible(true);
 	}
 	
@@ -191,6 +273,9 @@ public class StockInfoFrame extends JFrame {
 				String user_id = mainOperator.lf.getUserId();
 				connector.sendFav(user_id, getItemName);
 				mainOperator.mf.updatefavList();
+			}
+			else if (button.getText().equals("주식계산기")) {
+				cardLayout.show(cardPanel, "stockcalc");
 			}
 		}
 	}

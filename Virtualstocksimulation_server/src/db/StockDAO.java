@@ -196,7 +196,7 @@ public class StockDAO {
 	}
 	
 	
-	// 보유 주식 리스트 가져오기
+	// 즐겨찾기 주식 리스트 가져오기
 	public ArrayList<Stock> favStockList(String _uid) { 
 		ArrayList<Stock> favStockList = new ArrayList<>();
 		String item = null;

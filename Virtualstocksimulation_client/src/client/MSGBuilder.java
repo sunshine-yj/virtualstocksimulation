@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 서버에 필요한 정보를 요청하는 메시지
 package client;
 
 public class MSGBuilder {
@@ -108,5 +112,23 @@ public class MSGBuilder {
 		return madenMSG;
 	}
 	
+	
+	// 주식 리스트 요청
+	String rankListMSG() {
+		String madenMSG = null;
+		madenMSG =  "RANK" + "///" 
+				+ "END";
+		
+		return madenMSG;
+	}
+	
+	// 주식 리스트 요청
+	String simulMSG() {
+		String madenMSG = null;
+		madenMSG =  "RANK" + "///" 
+				+ "END";
+		
+		return madenMSG;
+	}
 	
 }

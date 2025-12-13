@@ -149,11 +149,24 @@ class ConnectedClient extends Thread{
 			}
 		}
 		if(_type == 9) {
-			ArrayList<Stock> havStockList = new ArrayList<>();
+			ArrayList<Stock> favList = new ArrayList<>();
 			String _smsg = null;
 			
-			havStockList = sd.favStockList(msgController.findUID(_msg));
-			_smsg = String.valueOf(mBuilder.favStockListMSG(havStockList));
+			favList = sd.favStockList(msgController.findUID(_msg));
+			_smsg = String.valueOf(mBuilder.favStockListMSG(favList));
+			System.out.println(_smsg); // 확인
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if(_type == 9) {
+			ArrayList<StockInformation> rankList = new ArrayList<>();
+			String _smsg = null;
+			
+			rankList = ss.rankIteam();
+			_smsg = String.valueOf(mBuilder.rankStockListMSG(rankList));
 			System.out.println(_smsg); // 확인
 			try {
 				dataOutStream.writeUTF(_smsg);

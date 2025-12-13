@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 서버에서 전송된 메시지를 분리하는 클래스
 package client;
 
 import java.util.*;
@@ -6,22 +10,6 @@ import client.*;
 public class ReceivedMSGTokenizer {
 	
 	StringTokenizer st;
-	MSGTable mt = new MSGTable();
-	public int detection(String _msg) {
-		int result = -1;
-		String tag;
-		st = new StringTokenizer(_msg, "///");
-		tag = st.nextToken();
-		for(int i = 0; i<mt.numberOfMSG; i++) {
-			if(tag.equals(mt.MSGtags[i])) {
-				result = i;
-				break;
-			} else {
-				
-			}
-		}
-		return result;
-	}
 	
 	// 유저 관련 메소드
 	// 아이디추출을 위한 메소드
@@ -132,6 +120,28 @@ public class ReceivedMSGTokenizer {
 			}
 			
 			list.add(new Stock(itemName));
+		}
+		
+		return list;
+	}
+	
+	public ArrayList<Stock> rankList(String _msg) {
+		ArrayList<Stock> list = new ArrayList<>();
+		st = new StringTokenizer(_msg, "///");
+		
+		st.nextToken();   // 수신 메시지에서 tag부분 추출
+		while(st.hasMoreTokens()) {
+			String itemName = st.nextToken(); // 주식 이름 추출
+			
+			if(itemName.equals("END")) {
+				break;
+			}
+			
+			int stockPrice = Integer.valueOf(st.nextToken());
+			double stockFltrt = Double.valueOf(st.nextToken());
+			int stockCnt = Integer.valueOf(st.nextToken());
+			
+			list.add(new Stock(itemName, stockPrice, stockCnt, stockFltrt));
 		}
 		
 		return list;

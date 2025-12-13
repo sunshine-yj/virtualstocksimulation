@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 메시지 송신 및 수신하는 클래스
 package client;
 
 import java.io.*;
@@ -23,10 +27,7 @@ public class Connector {
 			inStream = mySocket.getInputStream();
 			dataInStream =  new DataInputStream(inStream);
 			Thread.sleep(100);
-			
-//			while(true) {
-//				
-//			}
+
 		
 		}catch(Exception e) {
 			
@@ -153,6 +154,34 @@ public class Connector {
 		
 		try {
 			dataOutStream.writeUTF(mBuilder.favListMSG(_uid));
+			msg = dataInStream.readUTF();
+			System.out.println(msg);
+		}catch(Exception e) {
+			
+		}
+		
+		return msg;
+	}
+	
+	public String sendRankList() {
+		String msg = null;
+		
+		try {
+			dataOutStream.writeUTF(mBuilder.rankListMSG());
+			msg = dataInStream.readUTF();
+			System.out.println(msg);
+		}catch(Exception e) {
+			
+		}
+		
+		return msg;
+	}
+	
+	public String sendSimulation() {
+		String msg = null;
+		
+		try {
+			dataOutStream.writeUTF(mBuilder.rankListMSG());
 			msg = dataInStream.readUTF();
 			System.out.println(msg);
 		}catch(Exception e) {

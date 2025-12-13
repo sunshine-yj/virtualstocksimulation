@@ -3,7 +3,7 @@ package api;
 import java.util.*;
 import java.util.ArrayList;
 
-public class StockInformation {
+public class StockInformation implements Comparable<StockInformation>{
 	String itemName; // 종목명
 	int clPrice; // 종가
 	Double fltRt; // 등락률
@@ -36,6 +36,18 @@ public class StockInformation {
 
 	public int getTrqu() {
 		return trqu;
+	}
+	
+	// https://hianna.tistory.com/569를 참고하여 정렬하였습니다.
+	@Override
+	public int compareTo(StockInformation o) {
+		if(o.trqu < trqu) {
+			return 1;
+		} else if (o.trqu > trqu) {
+			return -1;
+		}
+		
+		return 0;
 	}
 	
 	
