@@ -177,18 +177,19 @@ public class Connector {
 		return msg;
 	}
 	
-	public String sendSimulation() {
+	public int sendSimulation(String _itemName, int _year, int _month) {
 		String msg = null;
-		
+		int oldPrice = 0;
 		try {
-			dataOutStream.writeUTF(mBuilder.rankListMSG());
+			dataOutStream.writeUTF(mBuilder.simulMSG(_itemName, _year, _month));
 			msg = dataInStream.readUTF();
 			System.out.println(msg);
 		}catch(Exception e) {
 			
-		}
-		
-		return msg;
+		}		
+		oldPrice = msgController.havStock(msg);
+
+		return oldPrice;
 	}
 	
 }

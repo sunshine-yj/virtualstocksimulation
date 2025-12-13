@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 메시지 생성 클래스
 package server;
 
 import java.util.ArrayList;
@@ -20,25 +24,13 @@ public class MSGBuilder {
 
 		return madenMSG;
 	}
-	
-	// 인기 차트 정보 전달 메시지
-	String topStockMSG(String stockName, int stockMoney, int updownMoney, int sellcnt) {
-		String madenMSG = null;
-		madenMSG =  "TOPSTOCK" + "///" 
-				+ stockName + "///"
-				+ stockMoney + "///"
-				+ updownMoney + "///"
-				+ sellcnt + "///"
-				+ "END";
 
-		return madenMSG;
-	}
 	
 	// 주식 검색결과 위한 정보 메시지
 	String searchStockMSG(String itemName, int clPrice, Double fltRt, int vs, int trqu) {
 		String madenMSG = null;
 		if(itemName != null) {
-			madenMSG =  "TOPSTOCK" + "///" 
+			madenMSG =  "SEARCH" + "///" 
 					+ itemName + "///"
 					+ clPrice + "///"
 					+ fltRt + "///"
@@ -92,7 +84,7 @@ public class MSGBuilder {
 	StringBuilder favStockListMSG(ArrayList<Stock> favStockList) {
 		StringBuilder madenMSG = new StringBuilder();
 		
-		// 보유 주식 리스트 가져오기
+		// 즐겨찾기 리스트 가져오기
 		madenMSG.append("FAVLIST///");
 		for(Stock s : favStockList) {
 			madenMSG.append(s.getItemName()).append("///");
@@ -115,6 +107,16 @@ public class MSGBuilder {
 				.append(s.getTrqu()).append("///");
 		}
 		madenMSG.append("END");
+		
+		return madenMSG;
+	}
+	
+	String simulMSG(int _oldPrice) {
+		String madenMSG = null;
+
+		madenMSG = "SIMULATION" + "///" 
+				+ _oldPrice + "///" 
+				+ "END";
 		
 		return madenMSG;
 	}

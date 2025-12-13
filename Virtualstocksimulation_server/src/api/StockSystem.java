@@ -30,16 +30,51 @@ public class StockSystem {
 	
 	// 주식 검색을 위한 메소드
 	public StockInformation searchIteam(String itemName) {
-		LocalDate date = LocalDate.now().minusDays(2);
+		StockInformation item;
+		LocalDate date = LocalDate.now().minusDays(1);
 		//https://breakcoding.tistory.com/120
 		//주소에서 참고하여 사용하였습니다.
 		DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("yyyyMMdd");
-		String today = date.format(dateTime);
-		try {
-			return resultStock(today, itemName);
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		for(int i = 30; i > 0; i--) {
+			String today = date.format(dateTime);
+			try {
+				item = resultStock(today, itemName);
+				if(item != null) {
+					return item;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			date = date.minusDays(1);
+
 		}
+		return null;
+	}
+	
+	// 주식 시뮬레이션을 위한 메소드
+	public StockInformation simulIteam(String itemName, int _year, int _month) {
+		StockInformation item;
+		LocalDate day = LocalDate.of(_year, _month, 02);
+		System.out.println(day);
+		//https://breakcoding.tistory.com/120
+		//주소에서 참고하여 사용하였습니다.
+		DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("yyyyMMdd");
+		
+		for(int i = 30; i > 0; i--) {
+			String today = day.format(dateTime);
+
+			try {
+				item = resultStock(today, itemName);
+				if(item != null) {
+					return item;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			day = day.minusDays(1);
+		}
+		
 		return null;
 	}
 	
@@ -48,7 +83,7 @@ public class StockSystem {
 		ArrayList<StockInformation> list = new ArrayList<>();
 		ArrayList<StockInformation> newlist = new ArrayList<>();
 		
-		LocalDate date = LocalDate.now().minusDays(2);
+		LocalDate date = LocalDate.now().minusDays(4);
 		DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("yyyyMMdd");
 		String today = date.format(dateTime);
 		

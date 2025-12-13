@@ -123,10 +123,15 @@ public class MSGBuilder {
 	}
 	
 	// 주식 리스트 요청
-	String simulMSG() {
+	String simulMSG(String _itemName, int _year, int _month) {
 		String madenMSG = null;
-		madenMSG =  "RANK" + "///" 
+		madenMSG =  "SIMULATION" + "///"
+				+ _itemName + "///"
+				+ _year + "///"
+				+ _month + "///"
 				+ "END";
+		
+		System.out.println(madenMSG);
 		
 		return madenMSG;
 	}

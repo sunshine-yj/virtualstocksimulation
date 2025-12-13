@@ -19,7 +19,7 @@ public class ReceivedMSGTokenizer {
 		return st.nextToken();  // 수신 메시지에서 사용자아이디 부분 추출 후 리턴
 	}
 	
-	// 아이디추출을 위한 메소드
+	// 메시지추출을 위한 메소드
 	public int findResult(String _msg) {
 		st = new StringTokenizer(_msg, "///");
 		st.nextToken();   // 수신 메시지에서 tag부분 추출

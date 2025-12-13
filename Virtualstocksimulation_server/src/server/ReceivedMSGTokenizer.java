@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 메시지 분리 클래스
 package server;
 
 import java.util.StringTokenizer;
@@ -80,6 +84,23 @@ public class ReceivedMSGTokenizer {
 		st.nextToken();    // 수신된 주식명 추출
 		st.nextToken();    // 수신된 주식 개수 추출
 		return Integer.valueOf(st.nextToken());  // 수신된 주식 가격
+	}
+	
+	// 시뮬레이션
+	// 주식 개수 추출 메소드
+	int findYear(String _msg) {
+		st = new StringTokenizer(_msg, "///");
+		st.nextToken();   // 수신 메시지에서 tag부분 추출
+		st.nextToken();   // 수신 메시지에서 종목 추출
+		return Integer.valueOf(st.nextToken());  // 수신된 년도
+	}
+	
+	int findMonth(String _msg) {
+		st = new StringTokenizer(_msg, "///");
+		st.nextToken();   // 수신 메시지에서 tag부분 추출
+		st.nextToken();   // 수신 메시지에서 종목 추출
+		st.nextToken();   // 수신된 년도
+		return Integer.valueOf(st.nextToken());  // 수신된 월
 	}
 	
 	

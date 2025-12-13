@@ -1,7 +1,7 @@
 //기말고사 대체 과제
 //개발자 : 김유진
 //개발기간 : 2025.12.02 ~ 2025.12.14
-//내용 : 주식 정보 다이어로그 창
+//내용 : 주식 정보 및 시뮬레이션 UI
 package clientGUI;
 
 import java.awt.*;
@@ -138,7 +138,7 @@ public class StockInfoFrame extends JFrame {
 		
 		
 		
-		// 주식 구매 판매 버튼 배치
+		// 판매 버튼
 		JButton sell = new JButton("판 매");
 		JButton buy = new JButton("구 매");
 		sell.setPreferredSize(new Dimension(185, 30));
@@ -165,6 +165,7 @@ public class StockInfoFrame extends JFrame {
 			
 		});
 		
+		// 구매 버튼
 		buy.setPreferredSize(new Dimension(185, 30));
 		buy.setForeground(Color.WHITE);
 		buy.setBackground(Color.BLUE);
@@ -222,17 +223,49 @@ public class StockInfoFrame extends JFrame {
 		stockCnt.setPreferredSize(new Dimension(300, 30));
 		
 		
-		JLabel stockCntLabel = new JLabel("현재 총 가격 : ");
-		stockCntLabel.setPreferredSize(new Dimension(70, 30));
-		JTextField stockSumnow = new JTextField();
-		stockSumnow.setPreferredSize(new Dimension(300, 30));
-		stockSumnow.setEditable(false);
+		JLabel nowstockLabel = new JLabel("현재 가격 : ");
+		nowstockLabel.setPreferredSize(new Dimension(70, 30));
+		JTextField nowstockSum = new JTextField();
+		nowstockSum.setPreferredSize(new Dimension(300, 30));
+		nowstockSum.setEditable(false);
+		nowstockSum.setText(String.valueOf(clPrice));
+		
+		JLabel oldstockLabel = new JLabel("과거 가격 : ");
+		oldstockLabel.setPreferredSize(new Dimension(70, 30));
+		JTextField oldstock = new JTextField();
+		oldstock.setPreferredSize(new Dimension(300, 30));
+		oldstock.setEditable(false);
+		
+		JLabel revenue = new JLabel("수익 : ");
+		revenue.setPreferredSize(new Dimension(70, 30));
+		JTextField revenuePrice = new JTextField();
+		revenuePrice.setPreferredSize(new Dimension(300, 30));
+		revenuePrice.setEditable(false);
+		
+		JLabel revenuePercent = new JLabel("수익률 : ");
+		revenuePercent.setPreferredSize(new Dimension(70, 30));
+		JTextField revenuePricePercent = new JTextField();
+		revenuePricePercent.setPreferredSize(new Dimension(300, 30));
+		revenuePricePercent.setEditable(false);
 
 
 		// 출력 버튼
 		JButton simulationButton = new JButton("출력");
+		simulationButton.setPreferredSize(new Dimension(300, 30));
 		simulationButton.addActionListener(e -> {
 			
+			int _year = (int) yearComboBox.getSelectedItem();
+			int _month = (int) monthComboBox.getSelectedItem();
+			int _StockCnt = Integer.valueOf(stockCnt.getText());
+			
+			int oldPrice = connector.sendSimulation(itemName ,_year, _month);
+			
+			int reven = (clPrice * _StockCnt) - (oldPrice * _StockCnt);
+			double percent = ((double)clPrice - oldPrice) / oldPrice * 100;
+			
+			oldstock.setText(String.valueOf(oldPrice));
+			revenuePrice.setText(String.valueOf(reven));
+			revenuePricePercent.setText(String.format("%.2f%%", percent));
 		});
 
 		
@@ -240,10 +273,22 @@ public class StockInfoFrame extends JFrame {
 		mainPanel2.add(back, BorderLayout.NORTH);
 		dateSearch.add(yearComboBox);
 		dateSearch.add(monthComboBox);
+		
+		// 출력
+		dateSearch.add(nowstockLabel);
+		dateSearch.add(nowstockSum);
+		dateSearch.add(oldstockLabel);
+		dateSearch.add(oldstock);
+		dateSearch.add(revenue);
+		dateSearch.add(revenuePrice);
+		dateSearch.add(revenuePercent);
+		dateSearch.add(revenuePricePercent);
+
+		
+		// 입력
 		dateSearch.add(oldstockCntLabel);
 		dateSearch.add(stockCnt);
-		dateSearch.add(stockCntLabel);
-		dateSearch.add(stockSumnow);
+		dateSearch.add(simulationButton);
 
 		mainPanel2.add(dateSearch, BorderLayout.CENTER);
 		panel2.add(mainPanel2);

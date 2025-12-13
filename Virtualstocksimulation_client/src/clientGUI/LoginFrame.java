@@ -69,14 +69,12 @@ public class LoginFrame extends JFrame {
 				result = connector.sendLogin(typeId.getText(), pwd);
 				if(result != -1 ) {
 					user_id = typeId.getText();
-					
+					// 데이터 불러오기
 					mainOperator.mf.updateWallet();
 					mainOperator.mf.updateList();
 					mainOperator.mf.updatefavList();
 					mainOperator.mf.updateRankList();
 					
-//					mainOperator.mf.revalidate();
-//					mainOperator.mf.repaint();
 					mainOperator.mf.setVisible(true);
 					System.out.println("로그인 성공");
 					dispose();

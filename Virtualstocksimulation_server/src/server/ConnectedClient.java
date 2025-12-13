@@ -1,3 +1,7 @@
+//기말고사 대체 과제
+//개발자 : 김유진
+//개발기간 : 2025.12.02 ~ 2025.12.14
+//내용 : 서버 메시지 분류 및 전송 클래스
 package server;
 
 import java.io.DataInputStream;
@@ -161,7 +165,7 @@ class ConnectedClient extends Thread{
 				e.printStackTrace();
 			}
 		}
-		if(_type == 9) {
+		if(_type == 10) {
 			ArrayList<StockInformation> rankList = new ArrayList<>();
 			String _smsg = null;
 			
@@ -174,6 +178,21 @@ class ConnectedClient extends Thread{
 				e.printStackTrace();
 			}
 		}
+		if(_type == 11) {
+			String _smsg = null;
+			
+			sf = ss.simulIteam(msgController.findStock(_msg), msgController.findYear(_msg), msgController.findMonth(_msg));
+			_smsg = mBuilder.simulMSG(sf.getClPrice());
+
+			System.out.println(_smsg); // 확인
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("null 찾음"); // 확인
+			}
+		}
+		
 		
 	}
 	
@@ -232,5 +251,5 @@ class ConnectedClient extends Thread{
 		int plus = _itemCnt * _price;
 		ud.walletPlus(_uid, plus);
 	}
-	
+	 
 }
