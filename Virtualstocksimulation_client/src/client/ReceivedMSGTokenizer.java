@@ -147,4 +147,24 @@ public class ReceivedMSGTokenizer {
 		return list;
 	}
 	
+	// 차트 숫자 추출
+	public ArrayList<Integer> chartList(String _msg) {
+		ArrayList<Integer> list = new ArrayList<>();
+		st = new StringTokenizer(_msg, "///");
+		
+		st.nextToken();   // 수신 메시지에서 tag부분 추출
+		while(st.hasMoreTokens()) {
+			String stock = st.nextToken();
+
+			if(stock.equals("END")) {
+				break;
+			}
+			
+			int stockPrice = Integer.valueOf(stock);
+			list.add(stockPrice);
+		}
+		
+		return list;
+	}
+	
 }

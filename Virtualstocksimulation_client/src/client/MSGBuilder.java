@@ -136,4 +136,17 @@ public class MSGBuilder {
 		return madenMSG;
 	}
 	
+	
+	// 주식 차트 요청
+	String chartMSG(String _itemName) {
+		String madenMSG = null;
+		madenMSG =  "CHART" + "///"
+				+ _itemName + "///"
+				+ "END";
+		
+		System.out.println(madenMSG);
+		
+		return madenMSG;
+	}
+	
 }

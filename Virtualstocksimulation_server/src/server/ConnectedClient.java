@@ -192,6 +192,20 @@ class ConnectedClient extends Thread{
 				System.out.println("null 찾음"); // 확인
 			}
 		}
+		if(_type == 12) {
+			ArrayList<Integer> list = new ArrayList<>();
+			String _smsg = null;
+			
+			list = ss.chartIteam(msgController.findStock(_msg));
+			_smsg = mBuilder.chartMSG(list);
+
+			System.out.println(_smsg); // 확인
+			try {
+				dataOutStream.writeUTF(_smsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		
 	}

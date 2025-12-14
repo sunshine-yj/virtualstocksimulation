@@ -6,5 +6,5 @@ package server;
 
 public class MSGTable {
 	int numberOfMSG = 13;
-	String[] MSGtags = {"LOGIN", "SEARCH", "FAV", "REGISTER", "WALLET", "BUY", "SELL", "HAV", "HAVLIST", "FAVLIST", "RANK", "SIMULATION"};
+	String[] MSGtags = {"LOGIN", "SEARCH", "FAV", "REGISTER", "WALLET", "BUY", "SELL", "HAV", "HAVLIST", "FAVLIST", "RANK", "SIMULATION", "CHART"};
 }

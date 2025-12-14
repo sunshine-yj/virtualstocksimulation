@@ -29,8 +29,11 @@ public class StockInfoFrame extends JFrame {
 	
 	// 보유 금액
 	int wallet = 0;
+	
 	CardLayout cardLayout = new CardLayout();
 	JPanel cardPanel = new JPanel(cardLayout);
+	
+	
 	// 주식 구매 판매 
 	JPanel panel1 = new JPanel(new BorderLayout());
 	JPanel favsimPanel = new JPanel(new FlowLayout());
@@ -68,8 +71,10 @@ public class StockInfoFrame extends JFrame {
 		vs = rt.findvs(_msg);
 		trqu = rt.findtrqu(_msg);
 		
+		new StockChartFrame(connector.sendChart(itemName), itemName);
+		
 		// 주식 예상 금액 계산
-		JButton simButton = new JButton("주식계산기");
+		JButton simButton = new JButton("주식시뮬레이션");
 		simButton.addActionListener(ml);
 		simButton.setPreferredSize(new Dimension(185, 30));
 		favsimPanel.add(simButton);
@@ -115,7 +120,7 @@ public class StockInfoFrame extends JFrame {
 		Texttrqu.setPreferredSize(new Dimension(300, 30));
 		
 		
-		// 패널에 추가
+		// 주식 정보 패널
 		mainPanel.add(labelitemName);
 		mainPanel.add(TextitemName);
 		
@@ -138,7 +143,7 @@ public class StockInfoFrame extends JFrame {
 		
 		
 		
-		// 판매 버튼
+		// 판매 버튼 + 이벤트 처리
 		JButton sell = new JButton("판 매");
 		JButton buy = new JButton("구 매");
 		sell.setPreferredSize(new Dimension(185, 30));
@@ -165,7 +170,7 @@ public class StockInfoFrame extends JFrame {
 			
 		});
 		
-		// 구매 버튼
+		// 구매 버튼 + 이벤트 처리
 		buy.setPreferredSize(new Dimension(185, 30));
 		buy.setForeground(Color.WHITE);
 		buy.setBackground(Color.BLUE);
@@ -193,7 +198,11 @@ public class StockInfoFrame extends JFrame {
 		
 		sellBuyPanel.add(sell);
 		sellBuyPanel.add(buy);
+		
 		panel1.add(sellBuyPanel, BorderLayout.SOUTH);
+		
+		
+		//차트 패널
 		
 		
 		// 주식 시뮬레이션
@@ -319,10 +328,15 @@ public class StockInfoFrame extends JFrame {
 				connector.sendFav(user_id, getItemName);
 				mainOperator.mf.updatefavList();
 			}
-			else if (button.getText().equals("주식계산기")) {
+			else if (button.getText().equals("주식시뮬레이션")) {
 				cardLayout.show(cardPanel, "stockcalc");
 			}
 		}
 	}
+	
+	
+	
+	
+	
 	
 }

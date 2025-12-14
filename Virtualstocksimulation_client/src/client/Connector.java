@@ -192,4 +192,20 @@ public class Connector {
 		return oldPrice;
 	}
 	
+	public ArrayList<Integer> sendChart(String _itemName) {
+		ArrayList<Integer> list = new ArrayList<>();
+		String msg = null;
+		
+		try {
+			dataOutStream.writeUTF(mBuilder.chartMSG(_itemName));
+			msg = dataInStream.readUTF();
+			list = msgController.chartList(msg);
+			System.out.println(msg);
+		}catch(Exception e) {
+			
+		}
+		
+		return list;
+	}
+	
 }

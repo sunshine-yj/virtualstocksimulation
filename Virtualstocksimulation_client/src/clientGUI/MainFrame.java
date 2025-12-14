@@ -56,7 +56,7 @@ public class MainFrame extends JFrame {
 	JComboBox<String> favComboBox = new JComboBox<>(); // 즐겨찾기
 	
 	
-	// 보유 주식 리스트(인기 순위와 변경해야 함)
+	// 보유 주식 리스트
 	JPanel havListPanel = new JPanel(new BorderLayout());// 보유 주식 송출
 	JLabel havLabel = new JLabel("보유 주식 목록");
 	JList havStockList = new JList();
@@ -80,7 +80,7 @@ public class MainFrame extends JFrame {
 		// 메인화면을 중앙으로 배치
 		setLocationRelativeTo(null);
 		
-		// 검색 창
+		// 검색 창 + 이벤트 처히
 		typeItemNm.setPreferredSize(new Dimension(300, 30));
 		searchPanel.add(searchLabel);
 		searchPanel.add(typeItemNm);
@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
 		// 보유 금액 출력
 		typeWallet.setPreferredSize(new Dimension(100, 30));
 		typeWallet.setEditable(false);
-		
+	
 		
 		walletPanel.add(walletLabel);
 		walletPanel.add(typeWallet);
@@ -116,7 +116,14 @@ public class MainFrame extends JFrame {
 		rankPanrl.setPreferredSize(new Dimension(300, 250));
 		rankPanrl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rankLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		rankTable = new JTable(rankBody, rankHeader);
+		// https://whyswise.tistory.com/2 JTable 수정 불가는 부분은 여기서 참고하였습니다.
+		rankTable = new JTable(new DefaultTableModel(rankBody, rankHeader) {
+			@Override
+			public boolean isCellEditable(int rowindex, int colindex) {
+				return false;
+			}
+		});
+
 		rankPanrl.add(rankLabel, BorderLayout.NORTH);
 		rankPanrl.add(new JScrollPane(rankTable), BorderLayout.CENTER);
 		
@@ -125,7 +132,7 @@ public class MainFrame extends JFrame {
 		favComboBox.setPreferredSize(new Dimension(200, 40));
 		favComboBox.addActionListener(e -> {
 			String itemName = (String) favComboBox.getSelectedItem();
-			if(itemName.equals("선택목록")) {
+			if(itemName == null || itemName.equals("선택목록")) {
 				return;
 			}
 			String msg = connector.sendSearch(itemName);
@@ -139,7 +146,12 @@ public class MainFrame extends JFrame {
 		
 		
 		// 보유주식 조회 리스트
-		havTable = new JTable(havBody, havHeader);
+		havTable = new JTable(new DefaultTableModel(havBody, havHeader) {
+			@Override
+			public boolean isCellEditable(int rowindex, int colindex) {
+				return false;
+			}
+		});
 		havLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		havListPanel.add(havLabel, BorderLayout.NORTH);
 		havListPanel.add(new JScrollPane(havTable), BorderLayout.CENTER);
@@ -174,19 +186,38 @@ public class MainFrame extends JFrame {
 	// 보유 주식 목록 최신화
 	public void updateList() {
 		ArrayList<Stock> list = new ArrayList<>();
-		ArrayList<String> newlist = new ArrayList<>();
 		
 		String _msg;
 		_msg = connector.sendHavList(mainOperator.lf.getUserId());
 		list = rt.stockList(_msg);
-		int i = 0;
-		for(Stock s : list) {
-			havBody[i][0] = s.getItemName();
-			havBody[i][1] = String.valueOf(s.getHavCnt());
-			havBody[i][2] = String.valueOf(s.getPrice());
-			havBody[i][3] = String.valueOf(s.getHavCnt()*s.getPrice());
-			i++;
-		}
+
+		// JTable을 변경 불가능하게 설정후 데이터가 삽입되지 않아 생성형 AI의 도움을 받은 부분 입니다.
+		DefaultTableModel havModel = (DefaultTableModel) havTable.getModel();
+		havModel.setRowCount(0);
+		
+	    for (Stock s : list) {
+	    	if(s.getHavCnt() == 0 ) {
+	    		continue;
+	    	}
+	    	
+	        Object[] rowData = {
+	            s.getItemName(),
+	            s.getHavCnt(),
+	            s.getPrice(),
+	            s.getHavCnt() * s.getPrice()
+	        };
+	        havModel.addRow(rowData); // ArrayList의 데이터 그대로 JTable에 추가
+	    }
+		
+		// 기존 모델
+//		int i = 0;
+//		for(Stock s : list) {
+//			havBody[i][0] = s.getItemName();
+//			havBody[i][1] = String.valueOf(s.getHavCnt());
+//			havBody[i][2] = String.valueOf(s.getPrice());
+//			havBody[i][3] = String.valueOf(s.getHavCnt()*s.getPrice());
+//			i++;
+//		}
 		
 	}
 	
@@ -206,21 +237,33 @@ public class MainFrame extends JFrame {
 		
 	}
 	
+	// 주식 인기 순위 업데이트
 	public void updateRankList() {
 		ArrayList<Stock> list = new ArrayList<>();
 		ArrayList<String> newlist = new ArrayList<>();
 		String _msg;
 		_msg = connector.sendRankList();
 		list = rt.rankList(_msg);
-		int i = 0;
-		for(Stock s : list) {
-			rankBody[i][0] = String.valueOf(i+1);
-			rankBody[i][1] = s.getItemName();
-			rankBody[i][2] = String.valueOf(s.getPrice());
-			rankBody[i][3] = String.valueOf(s.getFltRt());
-			rankBody[i][4] = String.valueOf(s.getTrqu());
-			i++;
-		}
+		
+		DefaultTableModel rankModel = (DefaultTableModel) rankTable.getModel();
+	    rankModel.setRowCount(0);
+
+	    int rank = 1;
+	    for (Stock s : list) {
+	    	if(rank > 10) {
+            	break;
+            }
+	    	
+	        Object[] rowData = {
+	            rank++,
+	            
+	            s.getItemName(),
+	            s.getPrice(),
+	            s.getFltRt(),
+	            s.getTrqu()
+	        };
+	        rankModel.addRow(rowData);
+	    }
 		
 	}
 }

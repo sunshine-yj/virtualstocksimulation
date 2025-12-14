@@ -78,6 +78,7 @@ public class StockSystem {
 		return null;
 	}
 	
+	
 	// 주식 랭크을 위한 메소드
 	public ArrayList<StockInformation> rankIteam() {
 		ArrayList<StockInformation> list = new ArrayList<>();
@@ -102,6 +103,36 @@ public class StockSystem {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	
+	// 주식 차트 정보를 위한 메소드
+	public ArrayList<Integer> chartIteam(String _itemName) {
+		ArrayList<Integer> list = new ArrayList<>();
+
+		LocalDate date = LocalDate.now().minusDays(1);
+		DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("yyyyMMdd");
+		
+		for(int i = 0; i < 12; i++) {
+			
+			LocalDate months = LocalDate.now().minusMonths(i);
+			
+			for(int j = 30; j > 0; j--) {
+				String today = months.format(dateTime);
+
+				try {
+					int price = chartStock(today, _itemName);
+					if (price > 0) {
+			            list.add(price);
+			            break;
+			        }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				months = months.minusDays(1);
+			}
+		}
+		return list;
 	}
 	
 	
@@ -155,6 +186,55 @@ public class StockSystem {
         }
 		
 		return null;
+	}
+	
+	
+	private int chartStock(String _date, String _itemName) throws Exception {
+		
+		StringBuilder urlBuilder = new StringBuilder(API_URL);
+		urlBuilder.append("?serviceKey=").append(SERVICE_KEY);
+		urlBuilder.append("&pageNo=1"); // 페이지 쪽수
+		urlBuilder.append("&numOfRows=1");
+		urlBuilder.append("&resultType=json");
+		urlBuilder.append("&basDt=").append(_date);
+		urlBuilder.append("&itmsNm=").append((URLEncoder.encode(_itemName, "UTF-8"))); // AI를 통하여 종목명 입력값의 문제를 해결
+		
+		URL url = new URL(urlBuilder.toString());
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Accept", "application/json");
+		
+		BufferedReader br = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), "UTF-8")
+        );
+		
+        StringBuilder sb = new StringBuilder();
+        String line;
+        
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        
+        br.close();
+        conn.disconnect();
+		
+		
+		// JSON 파싱
+		JsonObject root = JsonParser.parseString(sb.toString()).getAsJsonObject();
+        JsonObject response = root.getAsJsonObject("response");
+        JsonObject body = response.getAsJsonObject("body");
+        JsonObject items = body.getAsJsonObject("items");
+        JsonArray itemArray = items.getAsJsonArray("item");
+        
+        for (int i = 0; i < itemArray.size(); i++) {
+            JsonObject obj = itemArray.get(i).getAsJsonObject();
+            
+            int clPrice = obj.get("clpr").getAsInt();// 종가
+            
+            return clPrice;
+        }
+		
+		return 0;
 	}
 	
 	

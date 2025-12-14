@@ -111,6 +111,7 @@ public class MSGBuilder {
 		return madenMSG;
 	}
 	
+	// 시뮬레이션
 	String simulMSG(int _oldPrice) {
 		String madenMSG = null;
 
@@ -119,5 +120,21 @@ public class MSGBuilder {
 				+ "END";
 		
 		return madenMSG;
+	}
+	
+	// 차트 디이터 전송
+	String chartMSG(ArrayList<Integer> list) {
+		StringBuilder madenMSG = new StringBuilder();
+		
+		// 랭킹 주식 리스트 가져오기
+		madenMSG.append("CHART///");
+		for(int s : list) {
+			madenMSG.append(s).append("///");
+		}
+		madenMSG.append("END");
+		System.out.println(madenMSG);
+	
+		
+		return String.valueOf(madenMSG);
 	}
 }
