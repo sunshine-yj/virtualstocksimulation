@@ -36,10 +36,10 @@ public class StockChartFrame extends JFrame {
 		
 		//데이터 입력
 		Collections.reverse(list); // 데이터 값 뒤집기
-		int month = 12;
+		int month = 1;
 	    for (int price : list) {
 	        dataset.addValue(price, _StockName, month + "월");
-	        month --;
+	        month ++;
 	    }
 
 		LineAndShapeRenderer renderer = new LineAndShapeRenderer();
