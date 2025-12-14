@@ -202,11 +202,7 @@ public class StockInfoFrame extends JFrame {
 		panel1.add(sellBuyPanel, BorderLayout.SOUTH);
 		
 		
-		//차트 패널
-		
-		
 		// 주식 시뮬레이션
-		
 		// 뒤로 가기 버튼
 		JButton back = new JButton("뒤로가기");
 		back.setPreferredSize(new Dimension(185, 30));

@@ -206,7 +206,7 @@ public class MainFrame extends JFrame {
 	            s.getPrice(),
 	            s.getHavCnt() * s.getPrice()
 	        };
-	        havModel.addRow(rowData); // ArrayList의 데이터 그대로 JTable에 추가
+	        havModel.addRow(rowData);
 	    }
 		
 		// 기존 모델

@@ -149,6 +149,7 @@ public class Connector {
 		return msg;
 	}
 	
+	// 즐겨찾기 리스트 분해
 	public String sendFavList(String _uid) {
 		String msg = null;
 		
@@ -163,6 +164,7 @@ public class Connector {
 		return msg;
 	}
 	
+	// 인기순위 리스트 요청
 	public String sendRankList() {
 		String msg = null;
 		
@@ -177,6 +179,7 @@ public class Connector {
 		return msg;
 	}
 	
+	// 시뮬레이션 데이터 요청
 	public int sendSimulation(String _itemName, int _year, int _month) {
 		String msg = null;
 		int oldPrice = 0;
@@ -192,6 +195,7 @@ public class Connector {
 		return oldPrice;
 	}
 	
+	// 차트 데이터 요청
 	public ArrayList<Integer> sendChart(String _itemName) {
 		ArrayList<Integer> list = new ArrayList<>();
 		String msg = null;

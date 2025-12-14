@@ -85,6 +85,7 @@ public class ReceivedMSGTokenizer {
 		return Integer.valueOf(st.nextToken());  // 수신 메시지에서 거래량 추출
 	}
 	
+	// 보유 주식 리스트 분해
 	public ArrayList<Stock> stockList(String _msg) {
 		ArrayList<Stock> list = new ArrayList<>();
 		st = new StringTokenizer(_msg, "///");
@@ -107,6 +108,7 @@ public class ReceivedMSGTokenizer {
 		return list;
 	}
 	
+	// 즐겨찾기 메시지 분해
 	public ArrayList<Stock> favList(String _msg) {
 		ArrayList<Stock> list = new ArrayList<>();
 		st = new StringTokenizer(_msg, "///");
@@ -125,6 +127,7 @@ public class ReceivedMSGTokenizer {
 		return list;
 	}
 	
+	// 인기순위 메시지 분해
 	public ArrayList<Stock> rankList(String _msg) {
 		ArrayList<Stock> list = new ArrayList<>();
 		st = new StringTokenizer(_msg, "///");
