@@ -1,1 +1,1 @@
-# virtualstocksimulation
+# 가상 주식 시뮬레이션 프로그램
